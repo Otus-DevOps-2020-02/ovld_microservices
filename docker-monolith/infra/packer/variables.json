@@ -1,0 +1,8 @@
+{
+  "project_id": "docker-275214",
+  "source_image_family": "ubuntu-1604-lts",
+  "machine_type": "n1-standard-2",
+  "zone": "us-central1-a",
+  "user": "vld",
+  "disk_size": "10"
+}

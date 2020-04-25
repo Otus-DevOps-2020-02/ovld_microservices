@@ -1,0 +1,17 @@
+plugin: gcp_compute
+zones:
+  - us-central1-a
+projects:
+  - docker-275214
+auth_kind: serviceaccount
+service_account_file: /home/vld/.secrets/docker-275214-5e54874bbd9b.json
+filters:
+  - name = docker*
+keyed_groups:
+  - key: tags['items']
+    separator: ''
+
+hostnames:
+  - name
+compose:
+  ansible_host: networkInterfaces[0].accessConfigs[0].natIP

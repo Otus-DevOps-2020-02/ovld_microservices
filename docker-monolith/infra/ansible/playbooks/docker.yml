@@ -1,0 +1,53 @@
+---
+- hosts: all
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+
+  - name: INSTALL PIP
+    apt:
+      name: python3-pip
+      state: present
+      force_apt_get: yes
+      update_cache: yes
+
+  - name: UPGRADE PIP
+    pip:
+      name: pip
+      state: latest
+
+  - name: INSTALL PACKAGES
+    apt:
+      name: ['apt-transport-https', 'ca-certificates', 'curl', 'gnupg-agent', 'software-properties-common']
+      state: present
+      force_apt_get: yes
+      update_cache: yes
+
+  - name: ADD GPG KEY
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+
+  - name: ADD REPO
+    apt_repository:
+      repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+      state: present
+
+  - name: INSTALL DOCKER
+    apt:
+      name: ['docker-ce', 'docker-ce-cli', 'containerd.io']
+      state: present
+      force_apt_get: yes
+      update_cache: yes
+
+  - name: START DOCKER
+    systemd:
+      name: docker
+      state: started
+      enabled: yes
+
+  - name: INSTALL DOCKER LIB FOR ANSIBLE
+    pip:
+      name: docker
+      state: latest

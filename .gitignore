@@ -1,0 +1,17 @@
+.packer/variables.json
+.packer/create-redditvm.config
+*.tfstate
+*.tfstate.*.backup
+*.tfstate.backup
+*.tfvars
+.terraform/
+*.vscode/
+*.retry
+*jdauphant.nginx
+ansible/roles/db/
+.vagrant/
+*.log
+*.pyc
+.molecule
+.cache
+.pytest_cache
