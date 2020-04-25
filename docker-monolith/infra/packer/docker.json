@@ -1,0 +1,25 @@
+{
+  "builders": [
+    {
+      "type": "googlecompute",
+      "project_id": "{{user `project_id`}}",
+      "image_name": "docker",
+      "image_family": "docker-family",
+      "source_image_family": "{{user `source_image_family`}}",
+      "zone": "{{user `zone`}}",
+      "ssh_username": "{{user `user`}}",
+      "machine_type": "{{user `machine_type`}}",
+      "disk_size": "{{user `disk_size`}}",
+      "disk_type": "pd-standard",
+      "image_description": "docker",
+      "tags": "docker",
+      "network": "default"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "ansible/playbooks/docker.yml"
+    }
+  ]
+}
