@@ -1,7 +1,7 @@
 # ovld_microservices
 ovld microservices repository
 
-### docker-4
+### docker-2
  - Создали докер хосты в gcp с помощью docker-machine;
  - Описали очень плохой образ нашего приложения с бд в одном контейнере;
  - Зпушили этот позор на докер хаб;
