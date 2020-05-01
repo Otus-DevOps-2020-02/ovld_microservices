@@ -1,0 +1,11 @@
+version: '3.3'
+services:
+  ui:
+    command: ${UI_CMD}
+    valumes: ${UI_SOURCE_CODE}:/app
+  post:
+    command: ${POST_PYTHON_SCRIPT_PATH}
+    valumes: ${POST_SOURCE_CODE}:/app
+  comment:
+    command: ${COMMENT_CMD}
+    valumes: ${COMMENT_SOURCE_CODE}:/app

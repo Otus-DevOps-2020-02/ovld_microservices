@@ -15,3 +15,4 @@ ansible/roles/db/
 .molecule
 .cache
 .pytest_cache
+.env
