@@ -34,7 +34,7 @@ ansible-playbook playbooks/app.yml
  - Запушил на хаб наше приложение;
  - Перед работой необходимо создать докер хост на gcp:
  ```
- docker-machine create --driver google \\n--google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-\nos-cloud/global/images/family/ubuntu-1604-lts \\n--google-machine-type n1-standard-1 \\n--google-zone us-central1-a \\ndocker-n1
+docker-machine create --driver google --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts --google-machine-type n1-standard-1 --google-zone us-central1-a --google-disk-size 50 --google-project docker-275214 docker-n1
 eval $(docker-machine env docker-machine)
 
 ```
@@ -65,4 +65,21 @@ docker run -d --network=reddit --network-alias=post_db --network-alias=comment_d
 docker run -d --network=reddit --network-alias=post ovld/post:1.0
 docker run -d --network=reddit --network-alias=comment ovld/comment:1.0
 docker run -d --network=reddit -p 9292:9292 ovld/ui:1.0
+```
+
+### docker-2
+ - поработали немного с сетями докера;
+ - поработали с docker-compose;
+ - описали наше приложение в docker-compose;
+ - добавили файл с переменными чтобы можно было задавать параметры не меняя сам docker-compose.yml;
+ - добавили docker-compose.override.yml который позволяет изменять код каждого из приложений, не выполняя сборку образа;
+ - имя проекта формеруется по названию текущего каталога, изменить можно указав переменную COMPOSE_PROJECT_NAME в .env или запустить docker-compose с флагом -p либо заэкспортить переменную с названием проекта;
+
+ - запустить проект можно:
+```
+cd src
+cp .env.example .env
+указать требуемые переменные;
+docker-compose build
+docker-compose up -d
 ```
