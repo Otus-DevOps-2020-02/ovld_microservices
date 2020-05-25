@@ -38,6 +38,8 @@ test_integration_job:
 
 deploy_dev_job:
   stage: review
+  variables:
+    DOCKER_TLS_CERTDIR: ""
   image: docker/compose:latest
   services:
   - docker:dind
