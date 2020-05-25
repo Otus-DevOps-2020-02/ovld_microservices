@@ -1,6 +1,6 @@
 stages:
   - build
-  - review
+  - deploy
 
 build:
   stage: build
@@ -14,27 +14,8 @@ build:
     - docker build -t ${DOCKER_LOGIN}/otus-reddit-gitlab:${CI_COMMIT_SHORT_SHA} ./reddit
     - docker push ${DOCKER_LOGIN}/otus-reddit-gitlab:${CI_COMMIT_SHORT_SHA}
 
-test_unit_job:
-  stage: test
-  image: ruby:2.4.2
-  variables:
-    DATABASE_URL: 'mongodb://mongo:27017'
-  services:
-    - mongo:latest
-  before_script:
-    - cd reddit
-    - bundle install
-  script:
-    - echo 'Testing 1'
-    - ruby simpletest.rb
-
-test_integration_job:
-  stage: test
-  script:
-    - echo 'Testing 2'
-
-deploy_dev_job:
-  stage: review
+deploy:
+  stage: deploy
   variables:
     DOCKER_TLS_CERTDIR: ""
   image: docker/compose:latest
@@ -44,29 +25,7 @@ deploy_dev_job:
     - docker version
     - docker-compose version
   script:
-    - echo docker-compose -f ./reddit/docker-compose.yml up -d
+    - docker-compose -f ./reddit/docker-compose.yml up -d
   environment:
     name: dev
     url: http://dev.example.com
-
-staging:
-  stage: stage
-  when: manual
-  only:
-    - /^\d+\.\d+.\d+/
-  script:
-    - echo 'Deploy STAGE'
-  environment:
-    name: stage
-    url: https://beta.example.com
-
-production:
-  stage: production
-  when: manual
-  only:
-    - /^\d+\.\d+.\d+/
-  script:
-    - echo 'Deploy PROD'
-  environment:
-    name: production
-    url: https://beta.example.com
