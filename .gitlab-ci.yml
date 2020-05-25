@@ -13,6 +13,9 @@ test:
   script:
     - echo 'Testing 1'
     - ruby simpletest.rb
+  tags:
+    - "docker"
+
 
 build:
   stage: build
