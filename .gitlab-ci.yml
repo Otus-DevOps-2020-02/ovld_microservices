@@ -26,6 +26,7 @@ test_unit_job:
   variables:
     DATABASE_URL: 'mongodb://mongo/'
   before_script:
+    - docker ps
     - ping -c3 mongo
     - cd reddit
     - bundle install
