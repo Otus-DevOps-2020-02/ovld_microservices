@@ -38,19 +38,14 @@ test_integration_job:
 
 deploy_dev_job:
   stage: review
-  image: docker:19.03.1
+  image: docker/compose:latest
   services:
-    - docker:19.03.1-dind
+  - docker:dind
   before_script:
-    - docker info
-    - apk update
-    - apk upgrade
-    - apk add python python-dev py-pip build-base
-    - pip install docker-compose
-    - docker-compose --version
-    - docker-compose -f ./reddit/docker-compose.yml down
+    - docker version
+    - docker-compose version
   script:
-    - docker-compose -f ./reddit/docker-compose.yml up -d
+    - echo docker-compose -f ./reddit/docker-compose.yml up -d
   environment:
     name: dev
     url: http://dev.example.com
