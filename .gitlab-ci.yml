@@ -1,33 +1,29 @@
 stages:
-  - test
   - build
+  - test
   - review
   - stage
   - production
 
-build_job:
+build:
   stage: build
   image: docker:19.03.1
   services:
     - docker:19.03.1-dind
   before_script:
-    - ping -c3 vk.com
     - docker info
   script:
     - docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
-    - echo 'Building'
     - docker build -t ${DOCKER_LOGIN}/otus-reddit-gitlab:${CI_COMMIT_SHORT_SHA} ./reddit
     - docker push ${DOCKER_LOGIN}/otus-reddit-gitlab:${CI_COMMIT_SHORT_SHA}
+
 test_unit_job:
   stage: test
-  image: ruby:2.4.2
+  variables:
+    DATABASE_URL: 'mongodb://mongo:27017'
   services:
     - mongo:latest
-  variables:
-    DATABASE_URL: 'mongodb://mongo/'
   before_script:
-    - docker ps
-    - ping -c3 mongo
     - cd reddit
     - bundle install
   script:
@@ -41,8 +37,11 @@ test_integration_job:
 
 deploy_dev_job:
   stage: review
+  image: docker:19.03.1
+  before_script:
+    - docker-compose -f ./reddit/docker-compose.yml down
   script:
-    - echo 'Deploy'
+    - docker-compose -f ./reddit/docker-compose.yml up -d
   environment:
     name: dev
     url: http://dev.example.com

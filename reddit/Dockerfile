@@ -1,5 +1,7 @@
 FROM alpine:3.4
 
+ENV DATABASE_URL mongo:27017
+
 WORKDIR /app
 
 COPY Gem* ./
