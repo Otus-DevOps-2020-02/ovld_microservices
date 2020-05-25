@@ -12,9 +12,8 @@ build_job:
     - docker:19.03.8-dind
   before_script:
     - docker info
-    - docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
-    - docker image ls
   script:
+    - docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
     - echo 'Building'
     - docker build -t ${DOCKER_LOGIN}/otus-reddit-gitlab:${CI_COMMIT_SHORT_SHA} ./reddit
     - docker push ${DOCKER_LOGIN}/otus-reddit-gitlab:${CI_COMMIT_SHORT_SHA}
