@@ -39,6 +39,8 @@ test_integration_job:
 deploy_dev_job:
   stage: review
   image: docker:19.03.1
+  services:
+    - docker:19.03.1-dind
   before_script:
     - docker info
     - apk update
