@@ -83,3 +83,12 @@ cp .env.example .env
 docker-compose build
 docker-compose up -d
 ```
+
+### gitlab-ci-1
+
+```
+docker-machine create --driver google --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts --google-machine-type n1-standard-8 --google-zone us-central1-a --google-disk-size 150 --google-project docker-275214 docker-n1
+
+eval $(docker-machine env docker-n1)
+
+```
