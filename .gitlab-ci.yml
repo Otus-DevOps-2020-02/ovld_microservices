@@ -6,6 +6,10 @@ stages:
 test:
   stage: test
   image: ruby:2.4.2
+#  services:
+#    - mongo:latest
+#  variables:
+#    DATABASE_URL: 'mongo:27017'
   before_script:
     - cd reddit
     - bundle install
