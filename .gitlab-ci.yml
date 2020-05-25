@@ -40,6 +40,10 @@ deploy_dev_job:
   stage: review
   image: docker:19.03.1
   before_script:
+    - docker info
+    - apk update
+    - apk upgrade
+    - apk add python python-dev py-pip build-base
     - pip install docker-compose
     - docker-compose --version
     - docker-compose -f ./reddit/docker-compose.yml down
