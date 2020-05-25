@@ -25,4 +25,5 @@ deploy:
   environment:
     name: dev
     url: http://gitlab.vldops.club:9292
-  tags: gitlab-ci-shell
+  tags:
+    - "gitlab-ci-shell"
