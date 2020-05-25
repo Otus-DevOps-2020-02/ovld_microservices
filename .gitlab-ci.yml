@@ -28,4 +28,5 @@ deploy:
     - docker-compose -f ./reddit/docker-compose.yml up -d
   environment:
     name: dev
-    url: http://dev.example.com
+    url: http://gitlab.vldops.club:9292
+  tags: gitlab-ci-shell
