@@ -22,7 +22,7 @@ test_unit_job:
   stage: test
   services:
     - mongo:latest
-    script:
+  script:
     - ruby simpletest.rb
 
 test_integration_job:
