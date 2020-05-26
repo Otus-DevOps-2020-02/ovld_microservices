@@ -83,3 +83,12 @@ cp .env.example .env
 docker-compose build
 docker-compose up -d
 ```
+
+### gitlab-ci-1
+
+ - поиграли с gitlab-ce;
+ - развернули gitlab-ce в gcp;
+ - настроили CI/CD для reddit;
+ - настроили интеграцию со слаком;
+ - автоматизировали создания раннера в докере;
+ - для деплоя был создан отдельный shell раннер на хосте;

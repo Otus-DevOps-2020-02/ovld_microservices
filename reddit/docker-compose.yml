@@ -1,0 +1,10 @@
+version: '2.4'
+services:
+  mongo:
+    image: mongo:latest
+  app:
+    image: ${DOCKER_LOGIN}/otus-reddit-gitlab:${CI_COMMIT_SHORT_SHA}
+    ports:
+      - 9292:9292
+    depends_on:
+      - mongo

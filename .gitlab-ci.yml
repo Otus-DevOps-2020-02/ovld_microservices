@@ -1,0 +1,45 @@
+stages:
+  - test
+  - build
+  - deploy
+
+test:
+  stage: test
+  image: ruby:2.4.2
+#  services:
+#    - mongo:latest
+#  variables:
+#    DATABASE_URL: 'mongo:27017'
+  before_script:
+    - cd reddit
+    - bundle install
+  script:
+    - ruby simpletest.rb
+  tags:
+    - "docker"
+
+build:
+  stage: build
+  image: docker:19.03.1
+  services:
+    - docker:19.03.1-dind
+  before_script:
+    - docker info
+  script:
+    - docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
+    - docker build -t ${DOCKER_LOGIN}/otus-reddit-gitlab:${CI_COMMIT_SHORT_SHA} ./reddit
+    - docker push ${DOCKER_LOGIN}/otus-reddit-gitlab:${CI_COMMIT_SHORT_SHA}
+  tags:
+    - "docker"
+
+deploy:
+  stage: deploy
+  before_script:
+    - docker-compose -f ./reddit/docker-compose.yml down
+  script:
+    - docker-compose -f ./reddit/docker-compose.yml up -d
+  environment:
+    name: dev
+    url: http://gitlab.vldops.club:9292
+  tags:
+    - "gitlab-ci-shell"
