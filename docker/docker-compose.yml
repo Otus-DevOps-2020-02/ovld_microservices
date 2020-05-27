@@ -1,0 +1,81 @@
+version: '3.3'
+services:
+  db:
+    image: mongo:${MONGOTAG}
+    volumes:
+      - db:/data/db
+    networks:
+      backend:
+  ui:
+    image: ovld/ui:${TAG}
+    ports:
+      - 9292:9292/tcp
+    networks:
+      frontend:
+  post:
+    image: ovld/post:${TAG}
+    networks:
+      backend:
+      frontend:
+  comment:
+    image: ovld/comment:${TAG}
+    networks:
+      backend:
+      frontend:
+  prometheus:
+    image: ovld/prometheus
+    ports:
+      - '9090:9090'
+    volumes:
+      - prometheus:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention=1d'
+    networks:
+      backend:
+      frontend:
+  node-exporter:
+    image: prom/node-exporter:v0.15.2
+    user: root
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
+    networks:
+      backend:
+  mongodb-exporter:
+    image: ovld/mongodb-exporter
+    command:
+      - '--collect.database'
+      - '--collect.collection'
+      - '--collect.topmetrics'
+      - '--mongodb.uri=mongodb://db:27017'
+    networks:
+      backend:
+  blackbox-exporter:
+    image: prom/blackbox-exporter:v0.16.0
+    networks:
+      backend:
+
+volumes:
+  db:
+  prometheus:
+
+networks:
+  frontend:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet:  10.0.1.0/24
+  backend:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 10.0.2.0/24
