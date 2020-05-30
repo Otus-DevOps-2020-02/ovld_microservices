@@ -1,0 +1,18 @@
+global:
+  slack_api_url: 'https://hooks.slack.com/services/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'
+
+route:
+  receiver: 'notifications'
+
+receivers:
+- name: 'notifications'
+  slack_configs:
+  - channel: '#devops'
+  email_configs:
+  - to: vldgops@gmail.com
+    from: vldgops@gmail.com
+    smarthost: smtp.gmail.com:587
+    auth_username: vldgops@gmail.com
+    auth_identity: vldgops@gmail.com
+    auth_password: blndzihfuphokcbn
+    send_resolved: true

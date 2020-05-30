@@ -1,0 +1,111 @@
+version: '3.3'
+services:
+  prometheus:
+    image: ovld/prometheus
+    container_name: prometheus
+    ports:
+      - '9090:9090'
+    volumes:
+      - prometheus:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention=1d'
+    networks:
+      backend:
+      frontend:
+  node-exporter:
+    image: prom/node-exporter:v0.15.2
+    container_name: node-exporter
+    user: root
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
+    networks:
+      backend:
+      frontend:
+  mongodb-exporter:
+    image: ovld/mongodb-exporter
+    container_name: mongodb-exporter
+    command:
+      - '--collect.database'
+      - '--collect.collection'
+      - '--collect.topmetrics'
+      - '--mongodb.uri=mongodb://db:27017'
+    networks:
+      backend:
+  blackbox-exporter:
+    image: prom/blackbox-exporter:v0.16.0
+    container_name: blackbox-exporter
+    networks:
+      backend:
+      frontend:
+  cadvisor:
+    image: google/cadvisor:v0.29.0
+    container_name: cadvisor
+    volumes:
+      - '/:/rootfs:ro'
+      - '/var/run:/var/run:rw'
+      - '/sys:/sys:ro'
+      - '/var/lib/docker/:/var/lib/docker:ro'
+    ports:
+      - '8080:8080'
+    networks:
+      backend:
+      frontend:
+  grafana:
+    image: ovld/grafana
+    container_name: grafana
+#    volumes:
+#      - grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=secret
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    networks:
+      backend:
+      frontend:
+  alertmanager:
+    image: ovld/alertmanager
+    container_name: alertmanager
+    depends_on:
+      - prometheus
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+    ports:
+      - 9093:9093
+    networks:
+      backend:
+      frontend:
+
+  telegraf:
+    image: ovld/telegraf
+    container_name: telegraf
+    restart: always
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 9273:9273
+    networks:
+      backend:
+      frontend:
+
+volumes:
+  prometheus:
+  grafana:
+
+networks:
+  backend:
+    external:
+      name: microservices_backend
+  frontend:
+    external:
+      name: microservices_frontend
