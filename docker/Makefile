@@ -52,9 +52,9 @@ svc_build: # -- BUILD ALL APP IMAGES
 	@echo $(COMMIT) > ../src/post-py/build_info.txt
 	@echo $(BRANCH) >> ../src/post-py/build_info.txt
 
-	@docker build -t $(USERNAME)/comment ../src/comment/ $(BUILD)
-	@docker build -t $(USERNAME)/post ../src/post-py/ $(BUILD)
-	@docker build -t $(USERNAME)/ui ../src/ui/ $(BUILD)
+	@docker build -t $(USERNAME)/comment:logging ../src/comment/ $(BUILD)
+	@docker build -t $(USERNAME)/post:logging ../src/post-py/ $(BUILD)
+	@docker build -t $(USERNAME)/ui:logging ../src/ui/ $(BUILD)
 
 svc_push: # -- PUSH ALL APP IMAGES
 	@docker push $(USERNAME)/comment $(PUSH)
@@ -78,8 +78,19 @@ all_down: # -- DOWN ALL
 help:
 	@grep -P '^[a-zA-Z_-]+:.*#*.*' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-f_build:
-	@docker build -t ${USERNAME}/fluentd ../logging/fluentd $(BUILD)
+bug_build: # -- BUILD ALL APP IMAGES
+	@echo $(COMMIT) > ../src/comment/build_info.txt
+	@echo $(BRANCH) >> ../src/comment/build_info.txt
+	@echo $(COMMIT) > ../src/ui/build_info.txt
+	@echo $(BRANCH) >> ../src/ui/build_info.txt
+	@echo $(COMMIT) > ../src/post-py/build_info.txt
+	@echo $(BRANCH) >> ../src/post-py/build_info.txt
 
-f_restart:
-	@docker-compose -f docker-compose-logging.yml -p logging up -d fluentd
+	@docker build -t $(USERNAME)/comment:bugget ../src_bugget/comment/ $(BUILD)
+	@docker build -t $(USERNAME)/post:bugget ../src_bugget/post-py/ $(BUILD)
+	@docker build -t $(USERNAME)/ui:bugget ../src_bugget/ui/ $(BUILD)
+
+bug_push: # -- PUSH ALL APP IMAGES
+	@docker push $(USERNAME)/comment $(PUSH)
+	@docker push $(USERNAME)/post $(PUSH)
+	@docker push $(USERNAME)/ui $(PUSH)

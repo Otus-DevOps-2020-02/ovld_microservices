@@ -1,10 +1,10 @@
 version: '3.3'
 services:
-  fluentd:
-    image: ovld/fluentd
-    ports:
-      - "24224:24224"
-      - "24224:24224/udp"
+#  fluentd:
+#    image: ovld/fluentd
+#    ports:
+#      - "24224:24224"
+#      - "24224:24224/udp"
   elasticsearch:
     image: elasticsearch:7.4.0
     environment:
@@ -24,9 +24,15 @@ services:
     networks:
       backend:
       frontend:
+  fluentd:
+    image: ovld/fluentd
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
 
 volumes:
   elasticsearch:
+
 networks:
   frontend:
     driver: bridge
