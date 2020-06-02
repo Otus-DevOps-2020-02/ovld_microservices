@@ -7,18 +7,34 @@ services:
     networks:
       backend:
   ui:
-    image: ovld/ui
+    image: ovld/ui:logging
     ports:
       - 9292:9292/tcp
+    environment:
+      - ZIPKIN_ENABLED=${ZIPKIN_ENABLED}
     networks:
       frontend:
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: service.ui
   post:
-    image: ovld/post
+    image: ovld/post:logging
     networks:
       backend:
       frontend:
+    environment:
+      - ZIPKIN_ENABLED=${ZIPKIN_ENABLED}
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: service.post
   comment:
-    image: ovld/comment
+    image: ovld/comment:logging
+    environment:
+      - ZIPKIN_ENABLED=${ZIPKIN_ENABLED}
     networks:
       backend:
       frontend:

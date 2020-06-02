@@ -77,3 +77,9 @@ all_down: # -- DOWN ALL
 
 help:
 	@grep -P '^[a-zA-Z_-]+:.*#*.*' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+f_build:
+	@docker build -t ${USERNAME}/fluentd ../logging/fluentd $(BUILD)
+
+f_restart:
+	@docker-compose -f docker-compose-logging.yml -p logging up -d fluentd
