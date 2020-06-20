@@ -58,6 +58,6 @@ resource "google_compute_firewall" "k8-terraform-cluster" {
   }
   direction     = "INGRESS"
   priority      = 1000
-  source_ranges = ["0.0.0.0/0"]
   target_tags   = ["k8-terraform-node-pool"]
+  source_ranges = ["0.0.0.0/0"]
 }
